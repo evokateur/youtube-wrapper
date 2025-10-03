@@ -3,9 +3,9 @@
 An [Electron](https://www.electronjs.org/) wrapper for [YouTube](https://youtube.com)
 for less distracted, more directed viewing.
 
-- Hides suggested videos and other UI distractions; lets the video being watched take up the screen.
+- Hides suggested videos and other UI distractions; lets the video being watched take up the majority of the screen.
 
-- Can open/activate with a YouTube URL, bypassing the precarious YouTube feed.
+- Can open/activate with a YouTube URL, bypassing the precarious YouTube feed (which can often take hours to circumnavigate).
 
 - Can be configured as the default browser for YouTube URLs with tools such as [Finicky](https://github.com/johnste/finicky).
   
@@ -38,7 +38,7 @@ To build for macOS (.app or .dmg) or Linux (.AppImage), run:
 npm run package
 ```
 
-Output will appear in the `dist/` directory. On macOS you can simply:
+Output will appear in the `dist/` directory; on macOS you can simply:
 
 ```sh
 mv dist/mac/YouTube.app ~/Applications
