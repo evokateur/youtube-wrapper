@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import path from 'path';
 
+let pendingOpenUrl = null;
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -38,7 +40,7 @@ function saveAppData(data) {
 function createWindow(launchUrl = null)
 {
     const icon = nativeImage.createFromPath(path.join(__dirname, 'assets/icon.png'));
-    const baseUrl = "https:/youtube.com";
+    const baseUrl = "https://www.youtube.com";
     const baseDomains = ['youtube.com', 'google.com'];
 
     const win = new BrowserWindow({
@@ -107,7 +109,13 @@ function createWindow(launchUrl = null)
     win.loadURL(launchUrl ? launchUrl : completeUrl(baseUrl));
 }
 
-app.whenReady().then(createWindow);
+app.on('ready', () => {
+    createWindow();
+    if (pendingOpenUrl) {
+        handleOpenUrl(pendingOpenUrl);
+        pendingOpenUrl = null;
+    }
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -128,6 +136,14 @@ app.on('activate', () => {
 
 app.on('open-url', (event, url) => {
     event.preventDefault();
+    if (!app.isReady()) {
+        pendingOpenUrl = url;
+        return;
+    }
+    handleOpenUrl(url);
+});
+
+function handleOpenUrl(url) {
     if (url.includes('youtube.com')) {
         const windows = BrowserWindow.getAllWindows();
         if (windows.length > 0) {
@@ -137,4 +153,4 @@ app.on('open-url', (event, url) => {
             createWindow(url);
         }
     }
-});
+}
