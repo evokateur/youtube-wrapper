@@ -7,7 +7,7 @@ for less distracted, more directed viewing.
 
 - Can open/activate with a YouTube URL, bypassing the precarious YouTube feed (which can often take hours to circumnavigate).
 
-- Can be configured as the default browser for YouTube URLs with tools such as [Finicky](https://github.com/johnste/finicky).
+- Can be configured as the default browser for YouTube URLs with tools such as [Finicky](https://github.com/johnste/finicky), giving you a straight path from Raindrop.io to the video you meant to watch.
   
 ## Getting Started
 
