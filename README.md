@@ -1,13 +1,29 @@
 # YouTube Wrapper
 
 An [Electron](https://www.electronjs.org/) wrapper for [YouTube](https://youtube.com)
-for less distracted, more directed viewing.
+for more directed, less distracted viewing.
 
 - Hides suggested videos and other UI distractions; lets the video being watched take up the majority of the screen.
 
-- Can open/activate with a YouTube URL, bypassing the precarious YouTube feed (which can often take hours to circumnavigate).
+- Can open/activate with a YouTube URL, bypassing the precarious YouTube feed (which often can take hours to circumnavigate).
 
-- Can be configured as the default browser for YouTube URLs with tools such as [Finicky](https://github.com/johnste/finicky), giving you a straight path from Raindrop.io to the video you meant to watch.
+- Can be configured as the default browser for YouTube URLs with tools such as [Finicky](https://github.com/johnste/finicky), giving you a straight path from your stack/queue/heap to the video you meant to watch. 
+  Example `~/.finicky.js`:
+  ```javascript
+  export default {
+      defaultBrowser: "Firefox",
+      handlers: [
+          {
+              match: /youtube\.com/,
+              browser: "YouTube"
+          },
+          {
+              match: /youtu\.be/,
+              browser: "YouTube"
+          }
+      ]
+  };
+  ```
   
 ## Getting Started
 
@@ -38,26 +54,9 @@ To build for macOS (.app or .dmg) or Linux (.AppImage), run:
 npm run package
 ```
 
-Output will appear in the `dist/` directory; on macOS you can simply:
-
+Output will appear in the `dist/` directory. On macOS you can simply:
 ```sh
 mv dist/mac/YouTube.app ~/Applications
 ```
 
-Example Finicky configuration (`~/.finicky.js`):
 
-```javascript
-export default {
-    defaultBrowser: "Firefox",
-    handlers: [
-        {
-            match: /youtube\.com/,
-            browser: "YouTube"
-        },
-        {
-            match: /youtu\.be/,
-            browser: "YouTube"
-        }
-    ]
-};
-```
