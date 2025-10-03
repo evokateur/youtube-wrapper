@@ -9,10 +9,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const storageFile = path.join(app.getPath('userData'), 'youtube-data.json');
+const baseDomains = ['youtube.com', 'youtu.be', 'google.com'];
+const baseUrl = "https://www.youtube.com";
 
-function completeUrl(baseUrl) {
-    const data = fetchAppData();
-    return baseUrl + data.location;
+function isDomainAllowed(url) {
+    try {
+        const hostname = new URL(url).hostname;
+        for (const baseDomain of baseDomains) {
+            if (hostname === baseDomain || hostname.endsWith('.' + baseDomain)) {
+                return true;
+            }
+        }
+    } catch (e) {}
+    return false;
 }
 
 function fetchAppData() {
@@ -37,23 +46,14 @@ function saveAppData(data) {
     }
 }
 
+function resumeUrl() {
+    const data = fetchAppData();
+    return baseUrl + data.location;
+}
+
 function createWindow(launchUrl = null)
 {
     const icon = nativeImage.createFromPath(path.join(__dirname, 'assets/icon.png'));
-    const baseUrl = "https://www.youtube.com";
-    const baseDomains = ['youtube.com', 'youtu.be', 'google.com'];
-
-    function isDomainAllowed(url) {
-        try {
-            const hostname = new URL(url).hostname;
-            for (const baseDomain of baseDomains) {
-                if (hostname === baseDomain || hostname.endsWith('.' + baseDomain)) {
-                    return true;
-                }
-            }
-        } catch (e) {}
-        return false;
-    }
 
     const win = new BrowserWindow({
         width: 1200,
@@ -115,7 +115,7 @@ function createWindow(launchUrl = null)
         clearInterval(urlCheckInterval);
     });
 
-    win.loadURL(launchUrl ? launchUrl : completeUrl(baseUrl));
+    win.loadURL(launchUrl ? launchUrl : resumeUrl());
 }
 
 app.on('ready', () => {
@@ -153,7 +153,7 @@ app.on('open-url', (event, url) => {
 });
 
 function handleOpenUrl(url) {
-    if (url.includes('youtube.com')) {
+    if (isDomainAllowed(url)) {
         const windows = BrowserWindow.getAllWindows();
         if (windows.length > 0) {
             windows[0].loadURL(url);
