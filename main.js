@@ -41,7 +41,19 @@ function createWindow(launchUrl = null)
 {
     const icon = nativeImage.createFromPath(path.join(__dirname, 'assets/icon.png'));
     const baseUrl = "https://www.youtube.com";
-    const baseDomains = ['youtube.com', 'google.com'];
+    const baseDomains = ['youtube.com', 'youtu.be', 'google.com'];
+
+    function isDomainAllowed(url) {
+        try {
+            const hostname = new URL(url).hostname;
+            for (const baseDomain of baseDomains) {
+                if (hostname === baseDomain || hostname.endsWith('.' + baseDomain)) {
+                    return true;
+                }
+            }
+        } catch (e) {}
+        return false;
+    }
 
     const win = new BrowserWindow({
         width: 1200,
@@ -69,11 +81,8 @@ function createWindow(launchUrl = null)
     });
 
     win.webContents.on('will-navigate', (event, url) => {
-        const urlDomain = new URL(url).hostname.split('.').slice(-2).join('.');
-        for (const baseDomain of baseDomains) {
-            if (urlDomain === baseDomain || urlDomain.endsWith('.' + baseDomain)) {
-                return;
-            }
+        if (isDomainAllowed(url)) {
+            return;
         }
         event.preventDefault();
         shell.openExternal(url).catch(error => {
