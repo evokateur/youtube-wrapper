@@ -1,0 +1,30 @@
+{
+    "name": "youtube-wrapper",
+    "version": "1.0.0",
+    "description": "YouTube desktop wrapper built with Electron",
+    "type": "module",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "package": "electron-builder"
+    },
+    "author": "Wesley Hinkle",
+    "license": "MIT",
+    "devDependencies": {
+        "electron": "^37.2.0",
+        "electron-builder": "^26.0.12"
+    },
+    "build": {
+        "appId": "com.evokateur.youtube-wrapper",
+        "productName": "YouTube",
+        "mac": {
+            "target": "dmg",
+            "icon": "assets/app.icns"
+        },
+        "linux": {
+            "target": "AppImage",
+            "artifactName": "YouTube.AppImage",
+            "icon": "assets/icon.png"
+        }
+    }
+}
