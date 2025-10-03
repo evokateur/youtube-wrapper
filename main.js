@@ -115,6 +115,27 @@ function createWindow(launchUrl = null)
         clearInterval(urlCheckInterval);
     });
 
+    win.webContents.on('did-finish-load', () => {
+        win.webContents.insertCSS(`
+            /* Hide the sidebar with suggested/related items on a watch page */
+            ytd-watch-flexy #secondary,
+            ytd-watch-flexy #related,
+            ytd-watch-next-secondary-results-renderer,
+            ytd-compact-autoplay-renderer,
+            ytd-compact-video-renderer,
+            ytd-compact-radio-renderer,
+            ytd-compact-playlist-renderer {
+                display: none !important;
+            }
+
+            /* (Nice to have) let the main column take the full width when sidebar is gone */
+            ytd-watch-flexy[flexy] #primary {
+                max-width: none !important;
+            }
+        `);
+            // #secondary { display: none !important; }
+    });
+
     win.loadURL(launchUrl ? launchUrl : resumeUrl());
 }
 
