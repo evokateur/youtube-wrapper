@@ -38,9 +38,11 @@ To build for macOS (.app or .dmg) or Linux (.AppImage), run:
 npm run package
 ```
 
-Output will appear in the `dist/` directory.
+Output will appear in the `dist/` directory. On macOS you can simply:
 
-On macOS you can move `dist/mac/YouTube.app` to `~/Applications`
+```sh
+mv dist/mac/YouTube.app ~/Applications
+```
 
 Example Finicky configuration (`~/.finicky.js`):
 
