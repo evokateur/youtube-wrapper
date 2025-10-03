@@ -7,6 +7,8 @@ for more directed, less distracted viewing.
 
 - Can open/activate with a YouTube URL, bypassing the precarious YouTube feed (which often can take hours to circumnavigate).
 
+- Rather than opening at `/` (oh no, the feeeeeed) it opens/activates at the last location, making it easy to start where you left off.
+
 - Can be configured as the default browser for YouTube URLs with tools such as [Finicky](https://github.com/johnste/finicky), giving you a straight path from your stack/queue/heap to the video you meant to watch. 
   Example `~/.finicky.js`:
   ```javascript
