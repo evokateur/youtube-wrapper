@@ -14,7 +14,7 @@ for less distracted, more directed viewing.
 ### 1. Clone the repository
 
 ```bash
-git clone [youtube-wrapper repo]
+git clone git@github.com:evokateur/youtube-wrapper.git
 cd youtube-wrapper
 ```
 
