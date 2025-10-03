@@ -35,7 +35,7 @@ function saveAppData(data) {
     }
 }
 
-function createWindow()
+function createWindow(launchUrl = null)
 {
     const icon = nativeImage.createFromPath(path.join(__dirname, 'assets/icon.png'));
     const baseUrl = "https:/youtube.com";
@@ -104,15 +104,37 @@ function createWindow()
         clearInterval(urlCheckInterval);
     });
 
-    win.loadURL(completeUrl(baseUrl));
+    win.loadURL(launchUrl ? launchUrl : completeUrl(baseUrl));
 }
 
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
-    app.quit();
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
 
 app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) {
+        const launchUrl = process.argv.find(arg => arg.includes('youtube.com'));
+        if (launchUrl) {
+            createWindow(launchUrl);
+        } else {
+            createWindow();
+        }
+    }
+});
+
+app.on('open-url', (event, url) => {
+    event.preventDefault();
+    if (url.includes('youtube.com')) {
+        const windows = BrowserWindow.getAllWindows();
+        if (windows.length > 0) {
+            windows[0].loadURL(url);
+            windows[0].focus();
+        } else {
+            createWindow(url);
+        }
+    }
 });
