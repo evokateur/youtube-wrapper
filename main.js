@@ -102,8 +102,8 @@ function createWindow(launchUrl = null)
                 if (currentUrl !== lastUrl) {
                     lastUrl = currentUrl;
                     if (currentUrl.startsWith(baseUrl)) {
-                        const location = currentUrl.slice(baseUrl.length);
-                        const data = { location: location }
+                        const urlObj = new URL(currentUrl);
+                        const data = { location: urlObj.pathname + urlObj.search + urlObj.hash };
                         saveAppData(data);
                     }
                 }
