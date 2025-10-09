@@ -62,5 +62,5 @@ npm run package
 Output will appear in the `dist/` directory. On macOS you can simply:
 
 ```sh
-mv dist/mac/YouTube.app ~/Applications
+mv dist/mac/YouTube\ Wrapper.app ~/Applications
 ```
