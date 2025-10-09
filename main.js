@@ -60,7 +60,7 @@ function createWindow(launchUrl = null)
         height: 800,
         icon,
         autoHideMenuBar: true,
-        title: "YouTube",
+        title: "YouTube Wrapper",
         webPreferences: {
             sandbox: true,
             contextIsolation: true,

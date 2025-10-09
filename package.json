@@ -16,14 +16,14 @@
     },
     "build": {
         "appId": "com.evokateur.youtube-wrapper",
-        "productName": "YouTube",
+        "productName": "YouTube Wrapper",
         "mac": {
             "target": "dmg",
             "icon": "assets/app.icns"
         },
         "linux": {
             "target": "AppImage",
-            "artifactName": "YouTube.AppImage",
+            "artifactName": "YouTubeWrapper.AppImage",
             "icon": "assets/icon.png"
         }
     }
