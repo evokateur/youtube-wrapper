@@ -12,6 +12,16 @@ const storageFile = path.join(app.getPath('userData'), 'youtube-data.json');
 const baseDomains = ['youtube.com', 'youtu.be', 'google.com'];
 const baseUrl = "https://www.youtube.com";
 
+function extractActualUrl(url) {
+    try {
+        const urlObj = new URL(url);
+        if (urlObj.pathname === '/redirect' && urlObj.searchParams.has('q')) {
+            return urlObj.searchParams.get('q');
+        }
+    } catch (error) {}
+    return url;
+}
+
 function isDomainAllowed(url) {
     try {
         const hostname = new URL(url).hostname;
@@ -22,6 +32,22 @@ function isDomainAllowed(url) {
         }
     } catch (e) {}
     return false;
+}
+
+function getValidDomainUrl(url) {
+    const targetUrl = extractActualUrl(url);
+    if (isDomainAllowed(targetUrl)) {
+        return targetUrl;
+    }
+    return null;
+}
+
+function findValidYoutubeUrl(args) {
+    const candidateUrl = args.find(arg => arg.includes('youtube.com'));
+    if (candidateUrl) {
+        return getValidDomainUrl(candidateUrl);
+    }
+    return null;
 }
 
 function fetchAppData() {
@@ -73,17 +99,18 @@ function createWindow(launchUrl = null)
         try {
             const url = new URL(details.url);
             if (url.protocol == 'http:' || url.protocol == 'https:') {
-                shell.openExternal(details.url);
+                shell.openExternal(extractActualUrl(details.url));
             }
         } catch (error) {}
-
         return { action: "deny" };
     });
 
     win.webContents.on('will-navigate', (event, url) => {
         if (isDomainAllowed(url)) {
+            console.log('Allowed navigation to:', url);
             return;
         }
+        console.log('Blocked navigation to:', url);
         event.preventDefault();
         shell.openExternal(url).catch(error => {
             console.error('Failed to open external URL:', error);
@@ -155,7 +182,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-        const launchUrl = process.argv.find(arg => arg.includes('youtube.com'));
+        const launchUrl = findValidYoutubeUrl(process.argv);
         if (launchUrl) {
             createWindow(launchUrl);
         } else {
@@ -166,21 +193,23 @@ app.on('activate', () => {
 
 app.on('open-url', (event, url) => {
     event.preventDefault();
-    if (!app.isReady()) {
-        pendingOpenUrl = url;
+    const targetUrl = getValidDomainUrl(url);
+    if (!targetUrl) {
         return;
     }
-    handleOpenUrl(url);
+    if (!app.isReady()) {
+        pendingOpenUrl = targetUrl;
+        return;
+    }
+    handleOpenUrl(targetUrl);
 });
 
 function handleOpenUrl(url) {
-    if (isDomainAllowed(url)) {
-        const windows = BrowserWindow.getAllWindows();
-        if (windows.length > 0) {
-            windows[0].loadURL(url);
-            windows[0].focus();
-        } else {
-            createWindow(url);
-        }
+    const windows = BrowserWindow.getAllWindows();
+    if (windows.length > 0) {
+        windows[0].loadURL(url);
+        windows[0].focus();
+    } else {
+        createWindow(url);
     }
 }
