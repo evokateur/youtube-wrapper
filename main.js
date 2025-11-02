@@ -117,6 +117,36 @@ function createWindow(launchUrl = null)
         });
     });
 
+    win.webContents.on('before-input-event', (event, input) => {
+        if (input.type !== 'keyDown') {
+            return;
+        }
+
+        const isMac = process.platform === 'darwin';
+
+        if (isMac && input.meta && input.key === '[') {
+            event.preventDefault();
+            if (win.webContents.navigationHistory.canGoBack()) {
+                win.webContents.navigationHistory.goBack();
+            }
+        } else if (isMac && input.meta && input.key === ']') {
+            event.preventDefault();
+            if (win.webContents.navigationHistory.canGoForward()) {
+                win.webContents.navigationHistory.goForward();
+            }
+        } else if (input.alt && input.key === 'ArrowLeft') {
+            event.preventDefault();
+            if (win.webContents.navigationHistory.canGoBack()) {
+                win.webContents.navigationHistory.goBack();
+            }
+        } else if (input.alt && input.key === 'ArrowRight') {
+            event.preventDefault();
+            if (win.webContents.navigationHistory.canGoForward()) {
+                win.webContents.navigationHistory.goForward();
+            }
+        }
+    });
+
     let lastUrl = '';
     const urlCheckInterval = setInterval(() => {
         if (win.isDestroyed()) {
