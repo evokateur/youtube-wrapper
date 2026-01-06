@@ -28,10 +28,20 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
     if [ -d "$DEST_PATH" ]; then
         echo "Updating existing app bundle at $DEST_PATH"
-        rsync -a --delete "$SOURCE_PATH/" "$DEST_PATH/"
+        rm -rf "$DEST_PATH" || {
+            echo "Failed to remove $DEST_PATH"
+            exit 1
+        }
+        ditto "$SOURCE_PATH" "$DEST_PATH" || {
+            echo "Failed to copy with ditto"
+            exit 1
+        }
     else
         echo "Installing app bundle to $DEST_PATH"
-        cp -r "$SOURCE_PATH" "$DEST_PATH"
+        cp -r "$SOURCE_PATH" "$DEST_PATH" || {
+            echo "Failed to copy with cp"
+            exit 1
+        }
     fi
 
     echo "Installation complete: $DEST_PATH"
