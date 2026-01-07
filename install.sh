@@ -27,24 +27,20 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     fi
 
     if [ -d "$DEST_PATH" ]; then
-        echo "Updating existing app bundle at $DEST_PATH"
+        echo "Removing existing app bundle at $DEST_PATH"
         rm -rf "$DEST_PATH" || {
             echo "Failed to remove $DEST_PATH"
             exit 1
         }
-        ditto "$SOURCE_PATH" "$DEST_PATH" || {
-            echo "Failed to copy with ditto"
-            exit 1
-        }
-    else
-        echo "Installing app bundle to $DEST_PATH"
-        cp -r "$SOURCE_PATH" "$DEST_PATH" || {
-            echo "Failed to copy with cp"
-            exit 1
-        }
     fi
 
-    echo "Installation complete: $DEST_PATH"
+    echo "Installing app bundle to $DEST_PATH"
+    mv "$SOURCE_PATH" "$DEST_PATH" || {
+        echo "Failed to install to $DEST_PATH"
+        exit 1
+    }
+
+    echo "Installation complete."
     exit 0
 fi
 
